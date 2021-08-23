@@ -1,5 +1,6 @@
 #include "Tree.h"
 #include <stdio.h>
+#include <time.h>
 
 #ifdef __APPLE__ 
     #define FB_SIZE 2
