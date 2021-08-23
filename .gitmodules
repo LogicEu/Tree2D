@@ -1,0 +1,30 @@
+[submodule "utopia"]
+	path = utopia
+	url = git@github.com:LogicEu/utopia.git
+[submodule "fract"]
+	path = fract
+	url = git@github.com:LogicEu/fract.git
+[submodule "photon"]
+	path = photon
+	url = git@github.com:LogicEu/photon.git
+[submodule "imgtool"]
+	path = imgtool
+	url = git@github.com:LogicEu/imgtool.git
+[submodule "glee"]
+	path = glee
+	url = git@github.com:LogicEu/glee.git
+[submodule "gleex"]
+	path = gleex
+	url = git@github.com:LogicEu/gleex.git
+[submodule "glui"]
+	path = glui
+	url = git@github.com:LogicEu/glui.git
+[submodule "ethnic"]
+	path = ethnic
+	url = git@github.com:LogicEu/ethnic.git
+[submodule "nano"]
+	path = nano
+	url = git@github.com:LogicEu/nano.git
+[submodule "mass"]
+	path = mass
+	url = git@github.com:LogicEu/mass.git
