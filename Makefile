@@ -13,21 +13,26 @@ SRC=src/*.c src/scripts/*.c src/UI/*.c src/client/*.c src/server/packet.c
 CFLAGS=$(STD) $(WFLAGS) $(OPT) $(IDIR)
 OS=$(shell uname -s)
 
+ifeq ($(OS),Darwin)
+	OSFLAGS=-framework OpenGL -mmacos-version-min=10.9
+else
+    WLFLAG=-Wl,--whole-archive
+    WRFLAG=-Wl,--no-whole-archive
+	OSFLAGS=-lm -lGL -lGLEW
+endif
+
 LDIR=lib
 LSTATIC=$(patsubst %,lib%.a,$(SLIBS))
 LPATHS=$(patsubst %,$(LDIR)/%,$(LSTATIC))
 LFLAGS=$(patsubst %,-L%,$(LDIR))
+LFLAGS += $(WLFLAG)
 LFLAGS += $(patsubst %,-l%,$(SLIBS))
+LFLAGS += $(WRFLAG)
 LFLAGS += $(patsubst %,-l%,$(DLIBS))
-
-ifeq ($(OS),Darwin)
-	OSFLAGS=-framework OpenGL -mmacos-version-min=10.9
-else 
-	OSFLAGS=-lm -lGL -lGLEW
-endif
+LFLAGS += $(OSFLAGS)
 
 $(NAME): $(LPATHS) $(SRC)
-	$(CC) -o $@ $(SRC) $(CFLAGS) $(LFLAGS) $(OSFLAGS)
+	$(CC) -o $@ $(SRC) $(CFLAGS) $(LFLAGS)
 
 $(LDIR)/$(LDIR)%.a: $(LDIR)%.a $(LDIR)
 	mv $< $(LDIR)/
