@@ -43,5 +43,16 @@ $(LDIR):
 $(LDIR)%.a: %
 	cd $^ && make && mv $@ ../
 
+app: $(NAME)
+	mkdir $(NAME).app
+	mkdir $(NAME).app/Contents/
+	mkdir $(NAME).app/Contents/Resources/
+	mkdir $(NAME).app/Contents/MacOS/
+	cp $(NAME) $(NAME).app/Contents/MacOS/
+	cp assets/MacOS/Info.plist $(NAME).app/Contents/
+	cp assets/MacOS/icon.icns $(NAME).app/Contents/Resources/
+	cp -r assets $(NAME).app/Contents/Resources/assets/
+	tar -xzvf ../../Assets/lib.tar.gz -C $(NAME).app/Contents/MacOS/
+
 clean:
 	rm -r $(LDIR) && rm $(NAME)

@@ -77,6 +77,22 @@ build() {
     build_lib nano -s
 }
 
+build_app() {
+    echo "building MacOS app..."
+    mkdir $exe.app/
+    mkdir $exe.app/Contents/
+    mkdir $exe.app/Contents/Resources/
+    mkdir $exe.app/Contents/MacOS/
+
+    cp $exe $exe.app/Contents/MacOS/
+    cp assets/MacOS/Info.plist $exe.app/Contents/
+    cp assets/MacOS/icon.icns $exe.app/Contents/Resources/
+    cp -r assets $exe.app/Contents/Resources/assets/
+    tar -xzvf ../../Assets/lib.tar.gz -C $exe.app/Contents/MacOS/
+
+    echo "MacOS app built succesfully" 
+}
+
 clean() {
     rm -r lib && rm $exe
 }
@@ -99,6 +115,8 @@ case "$1" in
     "all")
         shift
         build && compile && ./$exe "$@";;
+    "app")
+        build_app;;
     "clean")
         clean;;
     *)
