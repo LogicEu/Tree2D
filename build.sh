@@ -119,7 +119,7 @@ case "$1" in
     "run")
         shift
         compile && ./$exe "$@";;
-    "comp")
+    "comp" | "client")
         compile;;
     "build")
         build;;
