@@ -10,6 +10,9 @@ CC=gcc
 NAME=Tree2D
 SRC=src/*.c src/scripts/*.c src/UI/*.c src/client/*.c src/server/packet.c
 
+SERVERSRC=src/server/*.c
+SERVERNAME=T2Dserver
+
 CFLAGS=$(STD) $(WFLAGS) $(OPT) $(IDIR)
 OS=$(shell uname -s)
 
@@ -43,8 +46,11 @@ $(LDIR):
 $(LDIR)%.a: %
 	cd $^ && make && mv $@ ../
 
-exe:
-	$(CC) -o $(NAME) $(SRC) $(CFLAGS) $(LFLAGS) 
+client:
+	$(CC) -o $(NAME) $(SRC) $(CFLAGS) $(LFLAGS)
+
+server:
+	$(CC) -o $(SERVERNAME) $(SERVERSRC) $(CFLAGS) $(LFLAGS)
 
 app: $(NAME)
 	mkdir $(NAME).app

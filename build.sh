@@ -3,7 +3,13 @@
 cc=gcc
 src='src/*.c src/scripts/*.c src/UI/*.c src/client/*.c src/server/packet.c'
 exe=Tree2D
-std=-'std=c99'
+server=T2Dserver
+std='-std=c99'
+
+if echo "$OSTYPE" | grep -q "linux"; then
+    rflag="-Wl,--whole-archive"
+    lflag="-Wl,--no-whole-archive"
+fi
 
 flags=(
     $std
@@ -24,6 +30,7 @@ lib=(
     -lz
     -lpng
     -ljpeg
+    $rflag
     -lenet
     -lfract
     -lutopia
@@ -35,6 +42,7 @@ lib=(
     -lphoton
     -lethnic
     -lmass
+    $lflag
 )
 
 linux=(
@@ -51,8 +59,10 @@ mac=(
 
 compile() {
     if echo "$OSTYPE" | grep -q "darwin"; then
+        echo "$cc ${flags[*]} ${inc[*]} ${lib[*]} ${mac[*]} $src -o $exe"
         $cc ${flags[*]} ${inc[*]} ${lib[*]} ${mac[*]} $src -o $exe
     elif echo "$OSTYPE" | grep -q "linux"; then
+        echo "$cc ${flags[*]} ${inc[*]} ${lib[*]} ${linux[*]} $src -o $exe"
         $cc ${flags[*]} ${inc[*]} ${lib[*]} ${linux[*]} $src -o $exe
     else
         echo "OS is not supported yet..." && exit
@@ -103,8 +113,9 @@ fail() {
 
 case "$1" in
     "server")
-        shift
-        pushd src/server/ && ./build.sh "$@" && popd;;
+        src=src/server/*.c
+        exe=$server
+        compile;;
     "run")
         shift
         compile && ./$exe "$@";;
