@@ -9,8 +9,6 @@ extern wxDirectory wxDir;
 extern unsigned int currentPlayerSprite;
 extern Entity player;
 
-static unsigned int cursorMode;
-
 static wxGroup* group;
 bmp_t bmp;
 static vec4 cursorColor;
@@ -67,14 +65,17 @@ typedef enum {
     CURSOR_MODE_DROPPICKER
 } cursorModeState;
 
-static void floodFill(bmp_t* bmp, uint8_t* src, uint8_t* stat, unsigned int x, unsigned int y)
+static cursorModeState cursorMode;
+
+static void floodFill(bmp_t* restrict bmp, const uint8_t* restrict src, const uint8_t* restrict stat, unsigned int x, unsigned int y)
 {
     uint8_t* p = px_at(bmp, x, y);
-    if (!memcmp(p, &src, bmp->channels) ||
-        memcmp(p, &stat, bmp->channels)) {
+    if (!memcmp(p, src, bmp->channels) ||
+        memcmp(p, stat, bmp->channels)) {
         return;
     }
-    memcpy(p, &src, bmp->channels);
+    memcpy(p, src, bmp->channels);
+
     if (x + 1 < bmp->width) floodFill(bmp, src, stat, x + 1, y);
     if (x > 0) floodFill(bmp, src, stat, x - 1, y);
     if (y + 1 < bmp->height) floodFill(bmp, src, stat, x, y + 1);
@@ -239,7 +240,9 @@ static void editorInput()
             } else if (cursorMode == CURSOR_MODE_ERASER) {
                 memset(ptr, 0, bmp.channels);
             } else if (cursorMode == CURSOR_MODE_TAR) {
-                floodFill(&bmp, p, ptr, x, y);
+                uint8_t stat[bmp.channels];
+                memcpy(&stat[0], ptr, bmp.channels);
+                floodFill(&bmp, &p[0], &stat[0], x, y);
             } else if (cursorMode == CURSOR_MODE_DROPPICKER) {
                 memcpy(&p[0], ptr, bmp.channels);
                 cursorColor = vec4_new(_utof(p[0]), _utof(p[1]), _utof(p[2]), _utof(p[3]));
@@ -253,12 +256,13 @@ static void SEmouseDraw()
 {
     static float camera[] = {0.0f, 0.0f, 1.0f, 0.0f};
     static vec4 white = {1.0f, 1.0f, 1.0f, 1.0f};
+    vec4 col = {cursorColor.x, cursorColor.y, cursorColor.z, clampf(cursorColor.w, 0.3, 1.0)};
     glUseProgram(assetsGetShader(SHADER_TEXTURE));
     glBindVertexArray(quadVAO);
     glee_shader_uniform_set(assetsGetShader(SHADER_TEXTURE), 4, "camera", &camera[0]);
     switch (cursorMode) {
         case CURSOR_MODE_BRUSH: {
-            drawTextureColor(*assetsGetTexture(TEXTURE_BRUSH), vec2_new(mouse.x + 6.0f, mouse.y + 6.0f), cursorColor);
+            drawTextureColor(*assetsGetTexture(TEXTURE_BRUSH), vec2_new(mouse.x + 6.0f, mouse.y + 6.0f), col);
             break;
         }
         case CURSOR_MODE_ERASER: {
@@ -266,14 +270,13 @@ static void SEmouseDraw()
             break;
         }
         case CURSOR_MODE_TAR: {
-            drawTextureColor(*assetsGetTexture(TEXTURE_TAR), vec2_new(mouse.x + 6.0f, mouse.y + 6.0f), cursorColor);
+            drawTextureColor(*assetsGetTexture(TEXTURE_TAR), vec2_new(mouse.x + 6.0f, mouse.y + 6.0f), col);
             break;
         }
         case CURSOR_MODE_DROPPICKER: {
-            drawTextureColor(*assetsGetTexture(TEXTURE_DROPPICKER), vec2_new(mouse.x + 6.0f, mouse.y + 6.0f), cursorColor);
+            drawTextureColor(*assetsGetTexture(TEXTURE_DROPPICKER), vec2_new(mouse.x + 6.0f, mouse.y + 6.0f), col);
             break;
         }
-        default: { break; }
     }
 }
 
@@ -309,7 +312,7 @@ void spriteEditorInit()
     uint8_t color[] = {255, 255, 255, 255};
     bmp = bmp_color(32, 32, 4, color);
     scale = 2.0f;
-    cursorColor = vec4_uni(0.0f);
+    cursorColor = vec4_new(0.0f, 0.0f, 0.0f, 1.0);
     cursorMode = CURSOR_MODE_BRUSH;
     slidersReset();
 }
