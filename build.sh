@@ -19,8 +19,16 @@ flags=(
 )
 
 inc=(
-    -I.
-    -Iinclude/
+    -Ifract
+    -Iutopia
+    -Iglee
+    -Igleex
+    -Iglui
+    -Imass
+    -Iphoton
+    -Inano
+    -Iethnic
+    -Iimgtool
 )
 
 lib=(
@@ -30,8 +38,8 @@ lib=(
     -lz
     -lpng
     -ljpeg
-    $rflag
     -lenet
+    $rflag
     -lfract
     -lutopia
     -lglee

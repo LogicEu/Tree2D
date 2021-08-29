@@ -267,7 +267,7 @@ static void getMouseInput()
     for (Entity e = 1; e < entity_count(); e++) {
         Rect* r = (Rect*)entity_get(e, COMPONENT_PHI_RECT);
         if (!r) continue;
-        if (rect_point_overlap(cursor, *r)) {
+        if (rect_point_overlap(*r, cursor)) {
             hover = e;
             break;
         }

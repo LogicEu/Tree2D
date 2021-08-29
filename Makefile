@@ -3,8 +3,7 @@
 STD=-std=c99
 WFLAGS=-Wall -Wextra
 OPT=-O2
-IDIR=-I. -Iinclude
-SLIBS=utopia fract imgtool photon mass glee gleex glui ethnic nano
+SLIBS=fract utopia glee gleex glui imgtool photon mass nano ethnic
 DLIBS=glfw freetype z png jpeg enet
 CC=gcc
 NAME=Tree2D
@@ -13,11 +12,9 @@ SRC=src/*.c src/scripts/*.c src/UI/*.c src/client/*.c src/server/packet.c
 SERVERSRC=src/server/*.c
 SERVERNAME=T2Dserver
 
-CFLAGS=$(STD) $(WFLAGS) $(OPT) $(IDIR)
 OS=$(shell uname -s)
-
 ifeq ($(OS),Darwin)
-	OSFLAGS=-framework OpenGL -mmacos-version-min=10.9
+	OSFLAGS=-framework OpenGL #-mmacos-version-min=10.9
 else
 	WLFLAG=-Wl,--whole-archive
 	WRFLAG=-Wl,--no-whole-archive
@@ -25,6 +22,7 @@ else
 endif
 
 LDIR=lib
+IDIR=$(patsubst %,-I%/,$(SLIBS))
 LSTATIC=$(patsubst %,lib%.a,$(SLIBS))
 LPATHS=$(patsubst %,$(LDIR)/%,$(LSTATIC))
 LFLAGS=$(patsubst %,-L%,$(LDIR))
@@ -33,6 +31,8 @@ LFLAGS += $(patsubst %,-l%,$(SLIBS))
 LFLAGS += $(WRFLAG)
 LFLAGS += $(patsubst %,-l%,$(DLIBS))
 LFLAGS += $(OSFLAGS)
+
+CFLAGS=$(STD) $(WFLAGS) $(OPT) $(IDIR)
 
 $(NAME): $(LPATHS) $(SRC)
 	$(CC) -o $@ $(SRC) $(CFLAGS) $(LFLAGS)

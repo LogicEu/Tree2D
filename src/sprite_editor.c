@@ -129,7 +129,7 @@ static void wxInput()
     if (glee_mouse_down(GLFW_MOUSE_BUTTON_LEFT)) {
         for (unsigned int i = WX_SE_RECT_BLACK; i <= WX_SE_RECT_WHITE; i++) {
             rect = group->widgets[i].widget;
-            if (rect_point_overlap(mouse, rect->rect)) {
+            if (rect_point_overlap(rect->rect, mouse)) {
                 memcpy(&cursorColor, &rect->color, sizeof(vec4));
                 slidersReset();
                 break;
@@ -227,7 +227,7 @@ static void editorInput()
 #define _ftou(f) (uint8_t)((f) * 255.0f)
 #define _utof(u) ((float)(u) / 255.0)
 
-        if (rect_point_overlap(mouse, r)) {
+        if (rect_point_overlap(r, mouse)) {
             float dx = mouse.x - r.x + r.w * 0.5f;
             float dy = mouse.y - r.y + r.h * 0.5f;
             unsigned int x = (unsigned int)(int)clampf(dx / scale, 0.0f, bmp.width);
