@@ -27,11 +27,9 @@ bool blackAndWhite;
 
 static void systemSnapshot()
 {
-    bmp_t tmp = bmp_new(SCREEN_WIDTH * FB_SIZE, SCREEN_HEIGHT * FB_SIZE, 4);
-    bmp_t bmp = bmp_flip_vertical(&tmp);
-    bmp_free(&tmp);
+    bmp_t bmp = bmp_new(SCREEN_WIDTH * FB_SIZE, SCREEN_HEIGHT * FB_SIZE, 4);
     glReadPixels(0, 0, bmp.width, bmp.height, GL_RGBA, GL_UNSIGNED_BYTE, &bmp.pixels[0]);
-    bmp_write("test.png", &bmp);
+    bmp_write("snapshot.png", &bmp);
     bmp_free(&bmp);
 }
 
@@ -252,7 +250,5 @@ void systemExit()
     wxDirectoryFree(&wxDir);
     free(universeFontGet());
     glee_deinit();
-    //zbug_diagnostic();
-    //zbug_exit();
     exit(0);
 }

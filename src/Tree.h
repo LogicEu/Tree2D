@@ -25,6 +25,7 @@ TREE FRAMEWORK HEADER
 #define SCREEN_YSCALE SCREEN_HEIGHT / SCREEN_SCALE
 
 #ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION
 #define KEY_MOD GLFW_KEY_LEFT_ALT
 #else
 #define KEY_MOD GLFW_KEY_LEFT_CONTROL
@@ -238,8 +239,8 @@ typedef struct Vertex {
 
 typedef struct Mesh {
     unsigned int id;
+    unsigned int vbo;
     array_t* vertices;
-    array_t* indices;
 } Mesh;
 
 typedef enum {
@@ -411,6 +412,8 @@ uint8_t* map_tile(map_t m, unsigned int x, unsigned int y);
 Mesh meshFromMap(map_t map);
 void meshBind(Mesh* mesh);
 void meshDestroy(Mesh* mesh);
+void meshUpdate(const Mesh* mesh);
+void meshAddQuad(Mesh* mesh, float x, float y, unsigned int atlasSize, unsigned int atlasIndex);
 Mesh meshCreate();
 
 Atlas atlasLoad(char** paths, unsigned int count);

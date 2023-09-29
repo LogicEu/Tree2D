@@ -196,8 +196,8 @@ static void drawMesh()
     glee_shader_uniform_set(shader, 4, "camera", (float*)&cam);
     glBindVertexArray(mesh.id);
     glBindTexture(GL_TEXTURE_2D, assetsGetTexture(TEXTURE_TILE_ATLAS)->id);
-    glDrawElements(GL_TRIANGLES, mesh.indices->used, GL_UNSIGNED_INT, 0);
-   
+    glDrawArrays(GL_TRIANGLES, 0, mesh.vertices->used);
+
     glBindVertexArray(quadVAO);
     glBindTexture(GL_TEXTURE_2D, 0);
     glUseProgram(assetsGetShader(SHADER_TEXTURE));

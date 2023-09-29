@@ -122,6 +122,8 @@ static Entity entityCreate()
         case ARCH_SWITCH_TILE: {
             Entity a = archetypeTerrainTile(TEXTURE_TILE, cursor);
             //terrainRecalcSingleTexture(a);
+            meshAddQuad(&mesh, cursor.x - 16.0f, cursor.y - 16.0f, 2, MAP_TILE_BLOCK);
+            meshUpdate(&mesh);
             return a;
         }
         case ARCH_SWITCH_GUN:

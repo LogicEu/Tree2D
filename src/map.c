@@ -55,6 +55,7 @@ map_t map_noise(unsigned int w, unsigned int h, unsigned int stat, unsigned int 
 #define IS_NULL(m, x, y) *map_tile(m, x, y) == MAP_TILE_NULL
 #define IS_STATIC(m, x, y) *map_tile(m, x, y) == MAP_TILE_STATIC
 #define IS_BLOCK(m, x, y) *map_tile(m, x, y) > 0 && *map_tile(m, x, y) < MAP_TILE_GUN
+
 void map_cellular_step(map_t* m)
 {
     map_t copy = map_copy(m);

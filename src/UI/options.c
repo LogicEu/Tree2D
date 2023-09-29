@@ -61,4 +61,5 @@ void optionsDirectoryReset()
 void optionsInit()
 {
     optionsDirectoryReset();
+    glee_mouse_mode(1);
 }

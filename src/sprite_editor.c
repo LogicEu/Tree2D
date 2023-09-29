@@ -11,7 +11,7 @@ extern Entity player;
 
 static wxGroup* group;
 bmp_t bmp;
-static vec4 cursorColor;
+static vec4 cursorColor = {0.0F, 0.0F, 0.0F, 1.0F};
 static float scale;
 static unsigned int fieldWidth, fieldHeight;
 
@@ -179,7 +179,8 @@ static void editorInput()
         bmp_t tmp = bmp_load(field->text);
         if (tmp.pixels != NULL) {
             bmp_free(&bmp);
-            bmp = tmp;
+            bmp = bmp_flip_vertical(&tmp);
+            bmp_free(&tmp);
         }
     }
     button = group->widgets[WX_SE_BUTTON_SAVE].widget;
